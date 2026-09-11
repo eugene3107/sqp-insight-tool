@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: claude-sqpanalysis
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.13
+Requires-Dist: numpy>=2.5.3
+Requires-Dist: openpyxl>=3.1.5
+Requires-Dist: pandas>=3.0.5
+Requires-Dist: plotly>=7.0.0
+Requires-Dist: pytest>=9.1.1
+Requires-Dist: streamlit>=1.63.0
+Requires-Dist: typer>=0.27.2

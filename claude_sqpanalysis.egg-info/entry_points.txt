@@ -1,0 +1,2 @@
+[console_scripts]
+sqp = sqp_tool.cli:app

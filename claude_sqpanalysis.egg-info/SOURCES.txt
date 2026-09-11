@@ -1,0 +1,14 @@
+pyproject.toml
+claude_sqpanalysis.egg-info/PKG-INFO
+claude_sqpanalysis.egg-info/SOURCES.txt
+claude_sqpanalysis.egg-info/dependency_links.txt
+claude_sqpanalysis.egg-info/entry_points.txt
+claude_sqpanalysis.egg-info/requires.txt
+claude_sqpanalysis.egg-info/top_level.txt
+sqp_tool/__init__.py
+sqp_tool/cli.py
+sqp_tool/insights.py
+sqp_tool/metrics.py
+sqp_tool/parse.py
+sqp_tool/pipeline.py
+sqp_tool/report.py

@@ -47,7 +47,7 @@ DATA_ORDER = [
     "period_type", "period_end", "source",
 ]
 
-HEADER_FILL = PatternFill("solid", fgColor="103953")
+HEADER_FILL = PatternFill("solid", fgColor="0F3D2A")
 HEADER_FONT = Font(color="FFFFFF", bold=True)
 
 

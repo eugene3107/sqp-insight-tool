@@ -15,8 +15,8 @@ from sqp_tool.metrics import Thresholds, compute_metrics, entity_summary
 from sqp_tool.parse import load_sqp
 from sqp_tool.report import write_report
 
-# Real Digital palette: navy leads, one lighter and one darker step, a pale surface tint
-BLUE, BLUE_LIGHT, BLUE_DARK, BLUE_PALE = "#103953", "#2F6A8F", "#0A2638", "#E6EEF3"
+# Real Digital green palette: forest green leads, a leaf-green lighter step, deep step, pale tint
+BLUE, BLUE_LIGHT, BLUE_DARK, BLUE_PALE = "#1B6B3A", "#3E9E5C", "#0F3D2A", "#E7F2EB"
 GRAY, GRAY_700, BLACK = "#8C8C8C", "#333333", "#0A0A0A"
 LOGO = Path(os.environ.get("SQP_LOGO", Path(__file__).with_name("assets") / "logo.png"))
 # Streamlit Community Cloud mounts the repo under /mount/src; a local-path field is meaningless there.
@@ -29,11 +29,11 @@ st.markdown(
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 html, body, [class*="css"], .stMarkdown, .stDataFrame { font-family: 'Poppins', -apple-system, sans-serif; color: #333333; }
 h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 700; }
-.ec-hero { background:#103953; color:#fff; padding:24px 32px; border-radius:8px; margin-bottom:24px; }
+.ec-hero { background:linear-gradient(120deg, #0F3D2A 0%, #1B6B3A 55%, #3E9E5C 100%); color:#fff; padding:24px 32px; border-radius:8px; margin-bottom:24px; }
 .ec-hero h1 { color:#fff; margin:0; font-size:28px; }
-.ec-hero p { color:#E6EEF3; margin:4px 0 0; font-weight:300; }
-.ec-label { color:#103953; text-transform:uppercase; letter-spacing:2px; font-size:11px; font-weight:500; }
-.ec-tile { background:#E6EEF3; border-left:4px solid #103953; border-radius:8px; padding:16px; }
+.ec-hero p { color:#CFE7D7; margin:4px 0 0; font-weight:300; }
+.ec-label { color:#1B6B3A; text-transform:uppercase; letter-spacing:2px; font-size:11px; font-weight:500; }
+.ec-tile { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:16px; }
 .ec-tile .v { font-size:28px; font-weight:700; color:#0A0A0A; line-height:1.1; }
 .ec-tile .s { font-size:13px; color:#333333; font-weight:300; }
 </style>
@@ -89,7 +89,7 @@ def _tile(col, label: str, value: str, sub: str) -> None:
 # --------------------------------------------------------------------------- sidebar
 with st.sidebar:
     if LOGO.exists():
-        st.image(str(LOGO), width=96)
+        st.image(str(LOGO), width=88)
     st.markdown('<div class="ec-label">Inputs</div>', unsafe_allow_html=True)
     uploads = st.file_uploader("SQP exports (.xlsx / .csv)", accept_multiple_files=True,
                                type=["xlsx", "xlsm", "csv", "tsv"])
@@ -174,7 +174,7 @@ with tab_over:
     # quadrant scatter: position = quadrant, colour = confidence, size = volume
     q = d[(d.ctr_index.notna()) & (d.cvr_index.notna()) & (d.quadrant != "Insufficient data")]
     fig2 = go.Figure()
-    for lvl, colr in (("high", BLUE_DARK), ("medium", BLUE_LIGHT), ("low", "#A9C2D3")):
+    for lvl, colr in (("high", BLUE_DARK), ("medium", BLUE_LIGHT), ("low", "#8FC4A0")):
         g = q[q.cvr_confidence == lvl]
         if g.empty:
             continue

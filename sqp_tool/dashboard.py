@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import io
+import os
 import tempfile
 from pathlib import Path
 
@@ -16,7 +17,7 @@ from sqp_tool.report import write_report
 
 BLUE, BLUE_LIGHT, BLUE_DARK, BLUE_PALE = "#2B54AB", "#4A73C9", "#1E3D7D", "#E8EEF8"
 GRAY, GRAY_700, BLACK = "#8C8C8C", "#333333", "#0A0A0A"
-LOGO = Path("/Users/eugenecheng/Documents/Brand Book/ss1.png")
+LOGO = Path(os.environ.get("SQP_LOGO", Path(__file__).with_name("assets") / "logo.png"))
 
 st.set_page_config(page_title="SQP Insight", page_icon="🔎", layout="wide")
 st.markdown(

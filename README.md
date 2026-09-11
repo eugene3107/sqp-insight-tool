@@ -37,6 +37,13 @@ uv run sqp dashboard
 Upload exports (or paste a local path) in the sidebar. Filters: entity, period, query type,
 confidence. Tabs mirror the Excel report; the enriched workbook can be downloaded from the page.
 
+## Deploy (Streamlit Community Cloud)
+
+The repo is deploy-ready: `streamlit_app.py` is the entry point, `requirements.txt` pins
+dependencies, `.streamlit/config.toml` carries the theme. At share.streamlit.io choose this repo,
+branch `main`, main file `streamlit_app.py`. Restrict viewers under *Settings → Sharing* if the
+app will hold client data.
+
 ## Key definitions
 
 | Metric | Formula |

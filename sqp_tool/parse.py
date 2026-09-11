@@ -8,6 +8,7 @@ Handles the layout drift seen across exports:
 """
 from __future__ import annotations
 
+import csv
 import re
 from pathlib import Path
 
@@ -156,14 +157,19 @@ def _frame_from_rows(rows: list[list[object]], source: str, fallback_entity: str
 
 
 def _coerce(df: pd.DataFrame) -> pd.DataFrame:
+    def _num(col: pd.Series) -> pd.Series:
+        # exports may quote numbers with thousands separators / currency symbols
+        cleaned = col.astype(str).str.replace(r"[,\s$£€]", "", regex=True)
+        return pd.to_numeric(cleaned, errors="coerce")
+
     for c in COUNT_COLS:
         if c not in df:
             df[c] = 0.0
-        df[c] = pd.to_numeric(df[c], errors="coerce").fillna(0.0)
+        df[c] = _num(df[c]).fillna(0.0)
     for c in PRICE_COLS:
         if c not in df:
             df[c] = float("nan")
-        df[c] = pd.to_numeric(df[c], errors="coerce")
+        df[c] = _num(df[c])
     df["query"] = df["query"].astype(str).str.strip().str.lower()
     ordered = ["query"] + META_COLS + COUNT_COLS + PRICE_COLS
     rest = [c for c in df.columns if c not in ordered]
@@ -184,9 +190,11 @@ def load_sqp(path: str | Path, sheets: list[str] | None = None) -> pd.DataFrame:
             if f is not None:
                 frames.append(f)
     elif path.suffix.lower() in {".csv", ".tsv"}:
+        # Amazon's CSV has a short metadata line above the header, so rows are ragged;
+        # read with the csv module rather than pandas. utf-8-sig drops the BOM.
         sep = "\t" if path.suffix.lower() == ".tsv" else ","
-        raw = pd.read_csv(path, header=None, sep=sep, dtype=object, keep_default_na=False)
-        rows = [[None if v == "" else v for v in r] for r in raw.values.tolist()]
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            rows = [[None if v == "" else v for v in r] for r in csv.reader(fh, delimiter=sep)]
         f = _frame_from_rows(rows, source=path.name, fallback_entity=path.stem)
         if f is not None:
             frames.append(f)

@@ -88,7 +88,7 @@ def _tile(col, label: str, value: str, sub: str) -> None:
 # --------------------------------------------------------------------------- sidebar
 with st.sidebar:
     if LOGO.exists():
-        st.image(str(LOGO), width=56)
+        st.image(str(LOGO), width=96)
     st.markdown('<div class="ec-label">Inputs</div>', unsafe_allow_html=True)
     uploads = st.file_uploader("SQP exports (.xlsx / .csv)", accept_multiple_files=True,
                                type=["xlsx", "xlsm", "csv", "tsv"])

@@ -38,6 +38,8 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 70
 .ec-tile .s { font-size:13px; color:#333333; font-weight:300; }
 [data-testid="stSidebar"] .ec-label { color:#8FC4A0; }
 [data-testid="stSidebar"] { border-right:1px solid #0A2A1C; }
+[data-testid="stSidebarUserContent"] { padding-top:0.5rem; margin-top:-3rem; }
+[data-testid="stSidebar"] [data-testid="stImage"] { margin-bottom:-0.5rem; }
 .ec-note { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:14px 16px; color:#0F3D2A; }
 </style>
 """,
@@ -92,7 +94,7 @@ def _tile(col, label: str, value: str, sub: str) -> None:
 # --------------------------------------------------------------------------- sidebar
 with st.sidebar:
     if LOGO.exists():
-        st.image(str(LOGO), width=52)
+        st.image(str(LOGO), width=34)
     st.markdown('<div class="ec-label">Inputs</div>', unsafe_allow_html=True)
     uploads = st.file_uploader("SQP exports (.xlsx / .csv)", accept_multiple_files=True,
                                type=["xlsx", "xlsm", "csv", "tsv"])

@@ -5,6 +5,8 @@ Market-vs-Brand funnel metrics and seller-facing insights. Replaces the four man
 (Market CTR / Brand CTR / Market CVR / Brand CVR) and adds indices, confidence, quadrants,
 opportunity sizing, price positioning and a ranked action list.
 
+**Live app:** https://sqp-insight-tool-qjaqwy4toqpu62hfqenb58.streamlit.app/ — upload an SQP export in the sidebar.
+
 Design notes: [SQP_TOOL_PLAN.md](SQP_TOOL_PLAN.md).
 
 ## Setup
@@ -39,10 +41,11 @@ confidence. Tabs mirror the Excel report; the enriched workbook can be downloade
 
 ## Deploy (Streamlit Community Cloud)
 
-The repo is deploy-ready: `streamlit_app.py` is the entry point, `requirements.txt` pins
-dependencies, `.streamlit/config.toml` carries the theme. At share.streamlit.io choose this repo,
-branch `main`, main file `streamlit_app.py`. Restrict viewers under *Settings → Sharing* if the
-app will hold client data.
+Deployed at https://sqp-insight-tool-qjaqwy4toqpu62hfqenb58.streamlit.app/ from branch `main`;
+pushes to `main` redeploy automatically. `streamlit_app.py` is the entry point, `requirements.txt`
+pins dependencies, `.streamlit/config.toml` carries the theme. Restrict viewers under
+*Settings → Sharing* on share.streamlit.io if the app will hold client data. The "local path"
+sidebar field only works when running locally — use the upload button on the cloud.
 
 ## Key definitions
 

@@ -36,6 +36,7 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 70
 .ec-tile { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:16px; }
 .ec-tile .v { font-size:28px; font-weight:700; color:#0A0A0A; line-height:1.1; }
 .ec-tile .s { font-size:13px; color:#333333; font-weight:300; }
+.ec-note { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:14px 16px; color:#0F3D2A; }
 </style>
 """,
     unsafe_allow_html=True,
@@ -110,8 +111,9 @@ st.markdown('<div class="ec-hero"><h1>SQP Insight</h1><p>Market vs Brand funnel 
             unsafe_allow_html=True)
 
 if not file_bytes:
-    st.info("Upload one or more SQP exports to begin." if IS_CLOUD
-            else "Upload one or more SQP exports (or enter a local path) to begin.")
+    msg = ("Upload one or more SQP exports to begin." if IS_CLOUD
+           else "Upload one or more SQP exports (or enter a local path) to begin.")
+    st.markdown(f'<div class="ec-note">{msg}</div>', unsafe_allow_html=True)
     st.stop()
 
 raw = _load(file_bytes)
@@ -132,7 +134,7 @@ conf = f4.multiselect("CTR confidence", ["high", "medium", "low"], default=["hig
 d = d_all[(d_all.entity_id == entity) & (d_all.period_label == period)]
 d = d[d.query_type.isin(qtypes) & d.ctr_confidence.isin(conf)]
 if d.empty:
-    st.warning("No rows match the current filters.")
+    st.markdown('<div class="ec-note">No rows match the current filters.</div>', unsafe_allow_html=True)
     st.stop()
 
 # --------------------------------------------------------------------------- KPI tiles
@@ -245,7 +247,7 @@ with tab_price:
     ps = price_sensitivity(d)
     st.markdown("Queries where a price premium (>{:.0%}) coincides with under-conversion.".format(price_band))
     if ps.empty:
-        st.success("No price-sensitivity flags at current thresholds.")
+        st.markdown('<div class="ec-note">No price-sensitivity flags at current thresholds.</div>', unsafe_allow_html=True)
     else:
         st.dataframe(ps, width="stretch", hide_index=True,
                      column_config={c: st.column_config.NumberColumn(format="%.2%") for c in

@@ -81,6 +81,20 @@ def _analyse(raw: pd.DataFrame, min_impr: int, min_clicks: int, price_band: floa
     return enrich(d, t, list(own) or None, list(comp) or None)
 
 
+PCT_LABELS = {
+    "mkt_ctr": "Market CTR", "own_ctr": "Brand CTR", "mkt_cvr": "Market CVR", "own_cvr": "Brand CVR",
+    "impr_share": "Impr. share", "purch_share": "Purchase share", "share_drift": "Share drift",
+    "price_gap_click": "Price gap", "own_cart_rate": "Brand cart rate", "mkt_cart_rate": "Market cart rate",
+}
+
+
+def _cols(pct: tuple[str, ...] = (), idx: tuple[str, ...] = (), **extra) -> dict:
+    """Column config: percentages rendered as %, indices as multiples."""
+    cfg = {c: st.column_config.NumberColumn(PCT_LABELS.get(c, c), format="percent") for c in pct}
+    cfg |= {c: st.column_config.NumberColumn(c.replace("_index", " index"), format="%.2f×") for c in idx}
+    return cfg | extra
+
+
 def _pct(x: float) -> str:
     return "–" if pd.isna(x) else f"{x:.2%}"
 
@@ -221,12 +235,9 @@ with tab_over:
 with tab_act:
     a = action_list(d, top_n=25)
     st.dataframe(a, width="stretch", hide_index=True,
-                 column_config={"impr_share": st.column_config.NumberColumn(format="%.2%"),
-                                "ctr_index": st.column_config.NumberColumn(format="%.2f×"),
-                                "cvr_index": st.column_config.NumberColumn(format="%.2f×"),
-                                "price_gap_click": st.column_config.NumberColumn(format="%+.0%"),
-                                "purchases_at_stake": st.column_config.NumberColumn(format="%.1f"),
-                                "why": st.column_config.TextColumn(width="large")})
+                 column_config=_cols(("impr_share", "price_gap_click"), ("ctr_index", "cvr_index"),
+                                     purchases_at_stake=st.column_config.NumberColumn(format="%.1f"),
+                                     why=st.column_config.TextColumn(width="large")))
 
 with tab_q:
     quads = st.multiselect("Quadrant", sorted(d.quadrant.unique()), default=sorted(d.quadrant.unique()))
@@ -236,16 +247,13 @@ with tab_q:
             "lost_purchases", "biggest_leak", "attributes"]
     st.dataframe(d[d.quadrant.isin(quads)][cols].sort_values("sqp_volume", ascending=False),
                  width="stretch", hide_index=True, height=560,
-                 column_config={c: st.column_config.NumberColumn(format="%.2%") for c in
-                                ("impr_share", "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share",
-                                 "share_drift", "price_gap_click")}
-                 | {c: st.column_config.NumberColumn(format="%.2f×") for c in ("ctr_index", "cvr_index")})
+                 column_config=_cols(("impr_share", "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share",
+                                      "share_drift", "price_gap_click"), ("ctr_index", "cvr_index")))
 
 with tab_vis:
     st.markdown("Relevant, high-volume queries where you barely appear — ranked by expected purchases per +1pt share.")
     st.dataframe(visibility_gaps(d, 40), width="stretch", hide_index=True,
-                 column_config={c: st.column_config.NumberColumn(format="%.2%") for c in
-                                ("impr_share", "mkt_ctr", "mkt_cvr", "price_gap_click")})
+                 column_config=_cols(("impr_share", "mkt_ctr", "mkt_cvr", "price_gap_click")))
 
 with tab_price:
     ps = price_sensitivity(d)
@@ -254,8 +262,7 @@ with tab_price:
         st.markdown('<div class="ec-note">No price-sensitivity flags at current thresholds.</div>', unsafe_allow_html=True)
     else:
         st.dataframe(ps, width="stretch", hide_index=True,
-                     column_config={c: st.column_config.NumberColumn(format="%.2%") for c in
-                                    ("price_gap_click", "own_cvr", "mkt_cvr")})
+                     column_config=_cols(("price_gap_click", "own_cvr", "mkt_cvr"), ("cvr_index",)))
     pp = d[d.price_gap_click.notna()]
     if not pp.empty:
         fig3 = go.Figure()
@@ -274,9 +281,8 @@ with tab_tok:
     tk = token_rollup(d).head(60)
     st.markdown("Performance rolled up by query word — spot attributes (colour, size, form) where you over/under-index.")
     st.dataframe(tk, width="stretch", hide_index=True, height=560,
-                 column_config={c: st.column_config.NumberColumn(format="%.2%") for c in
-                                ("impr_share", "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share")}
-                 | {c: st.column_config.NumberColumn(format="%.2f×") for c in ("ctr_index", "cvr_index")})
+                 column_config=_cols(("impr_share", "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share"),
+                                     ("ctr_index", "cvr_index")))
 
 # --------------------------------------------------------------------------- export
 st.divider()

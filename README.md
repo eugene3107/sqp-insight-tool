@@ -45,7 +45,8 @@ Deployed at https://sqp-insight-tool-qjaqwy4toqpu62hfqenb58.streamlit.app/ from 
 pushes to `main` redeploy automatically. `streamlit_app.py` is the entry point, `requirements.txt`
 pins dependencies, `.streamlit/config.toml` carries the theme. Restrict viewers under
 *Settings → Sharing* on share.streamlit.io if the app will hold client data. The "local path"
-sidebar field only works when running locally — use the upload button on the cloud.
+sidebar field is shown only when running locally (hidden automatically on the cloud, or set
+`SQP_HIDE_LOCAL_PATH=1`).
 
 ## Key definitions
 

@@ -18,6 +18,8 @@ from sqp_tool.report import write_report
 BLUE, BLUE_LIGHT, BLUE_DARK, BLUE_PALE = "#2B54AB", "#4A73C9", "#1E3D7D", "#E8EEF8"
 GRAY, GRAY_700, BLACK = "#8C8C8C", "#333333", "#0A0A0A"
 LOGO = Path(os.environ.get("SQP_LOGO", Path(__file__).with_name("assets") / "logo.png"))
+# Streamlit Community Cloud mounts the repo under /mount/src; a local-path field is meaningless there.
+IS_CLOUD = str(Path(__file__).resolve()).startswith("/mount/src") or os.environ.get("SQP_HIDE_LOCAL_PATH") == "1"
 
 st.set_page_config(page_title="SQP Insight", page_icon="🔎", layout="wide")
 st.markdown(
@@ -90,7 +92,7 @@ with st.sidebar:
     st.markdown('<div class="ec-label">Inputs</div>', unsafe_allow_html=True)
     uploads = st.file_uploader("SQP exports (.xlsx / .csv)", accept_multiple_files=True,
                                type=["xlsx", "xlsm", "csv", "tsv"])
-    default_path = st.text_input("…or a local path", value="")
+    default_path = "" if IS_CLOUD else st.text_input("…or a local path", value="")
     st.markdown('<div class="ec-label">Thresholds</div>', unsafe_allow_html=True)
     min_impr = st.number_input("Own impressions to trust CTR", 1, 1000, 20)
     min_clicks = st.number_input("Own clicks to trust CVR", 1, 1000, 10)
@@ -107,7 +109,8 @@ st.markdown('<div class="ec-hero"><h1>SQP Insight</h1><p>Market vs Brand funnel 
             unsafe_allow_html=True)
 
 if not file_bytes:
-    st.info("Upload one or more SQP exports (or enter a local path) to begin.")
+    st.info("Upload one or more SQP exports to begin." if IS_CLOUD
+            else "Upload one or more SQP exports (or enter a local path) to begin.")
     st.stop()
 
 raw = _load(file_bytes)

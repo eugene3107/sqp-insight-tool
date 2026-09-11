@@ -18,7 +18,7 @@ from sqp_tool.report import write_report
 # Real Digital green palette: forest green leads, a leaf-green lighter step, deep step, pale tint
 BLUE, BLUE_LIGHT, BLUE_DARK, BLUE_PALE = "#1B6B3A", "#3E9E5C", "#0F3D2A", "#E7F2EB"
 GRAY, GRAY_700, BLACK = "#8C8C8C", "#333333", "#0A0A0A"
-LOGO = Path(os.environ.get("SQP_LOGO", Path(__file__).with_name("assets") / "logo.png"))
+LOGO = Path(os.environ.get("SQP_LOGO", Path(__file__).with_name("assets") / "logo-mark.png"))
 # Streamlit Community Cloud mounts the repo under /mount/src; a local-path field is meaningless there.
 IS_CLOUD = str(Path(__file__).resolve()).startswith("/mount/src") or os.environ.get("SQP_HIDE_LOCAL_PATH") == "1"
 
@@ -36,6 +36,8 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 70
 .ec-tile { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:16px; }
 .ec-tile .v { font-size:28px; font-weight:700; color:#0A0A0A; line-height:1.1; }
 .ec-tile .s { font-size:13px; color:#333333; font-weight:300; }
+[data-testid="stSidebar"] .ec-label { color:#8FC4A0; }
+[data-testid="stSidebar"] { border-right:1px solid #0A2A1C; }
 .ec-note { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:14px 16px; color:#0F3D2A; }
 </style>
 """,
@@ -90,7 +92,7 @@ def _tile(col, label: str, value: str, sub: str) -> None:
 # --------------------------------------------------------------------------- sidebar
 with st.sidebar:
     if LOGO.exists():
-        st.image(str(LOGO), width=88)
+        st.image(str(LOGO), width=52)
     st.markdown('<div class="ec-label">Inputs</div>', unsafe_allow_html=True)
     uploads = st.file_uploader("SQP exports (.xlsx / .csv)", accept_multiple_files=True,
                                type=["xlsx", "xlsm", "csv", "tsv"])

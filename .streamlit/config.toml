@@ -12,5 +12,9 @@ secondaryBackgroundColor = "#1B6B3A"
 textColor = "#FFFFFF"
 primaryColor = "#3E9E5C"
 
+[client]
+toolbarMode = "viewer"
+showSidebarNavigation = false
+
 [server]
 headless = true

@@ -95,6 +95,16 @@ def _cols(pct: tuple[str, ...] = (), idx: tuple[str, ...] = (), **extra) -> dict
     return cfg | extra
 
 
+CORE_RATES = ("mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr")
+
+
+def _hl(df: pd.DataFrame):
+    """Tint the four core rate columns so they stand out in every table."""
+    cols = [c for c in CORE_RATES if c in df.columns]
+    return df.style.set_properties(subset=cols, **{"background-color": BLUE_PALE, "color": BLUE_DARK,
+                                                   "font-weight": "600"})
+
+
 def _pct(x: float) -> str:
     return "–" if pd.isna(x) else f"{x:.2%}"
 
@@ -241,18 +251,19 @@ with tab_act:
 
 with tab_q:
     quads = st.multiselect("Quadrant", sorted(d.quadrant.unique()), default=sorted(d.quadrant.unique()))
-    cols = ["query", "query_type", "quadrant", "quadrant_strength", "sqp_volume", "impr_total", "impr_own",
-            "impr_share", "mkt_ctr", "own_ctr", "ctr_index", "ctr_signif", "clicks_own", "mkt_cvr", "own_cvr",
-            "cvr_index", "cvr_signif", "purch_share", "share_drift", "price_gap_click", "lost_clicks",
+    cols = ["query", "query_type", "quadrant", "quadrant_strength", "sqp_volume",
+            "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr",
+            "ctr_index", "cvr_index", "ctr_signif", "cvr_signif", "impr_total", "impr_own", "impr_share",
+            "clicks_own", "purch_share", "share_drift", "price_gap_click", "lost_clicks",
             "lost_purchases", "biggest_leak", "attributes"]
-    st.dataframe(d[d.quadrant.isin(quads)][cols].sort_values("sqp_volume", ascending=False),
+    st.dataframe(_hl(d[d.quadrant.isin(quads)][cols].sort_values("sqp_volume", ascending=False)),
                  width="stretch", hide_index=True, height=560,
                  column_config=_cols(("impr_share", "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share",
                                       "share_drift", "price_gap_click"), ("ctr_index", "cvr_index")))
 
 with tab_vis:
     st.markdown("Relevant, high-volume queries where you barely appear — ranked by expected purchases per +1pt share.")
-    st.dataframe(visibility_gaps(d, 40), width="stretch", hide_index=True,
+    st.dataframe(_hl(visibility_gaps(d, 40)), width="stretch", hide_index=True,
                  column_config=_cols(("impr_share", "mkt_ctr", "mkt_cvr", "price_gap_click")))
 
 with tab_price:
@@ -261,7 +272,7 @@ with tab_price:
     if ps.empty:
         st.markdown('<div class="ec-note">No price-sensitivity flags at current thresholds.</div>', unsafe_allow_html=True)
     else:
-        st.dataframe(ps, width="stretch", hide_index=True,
+        st.dataframe(_hl(ps), width="stretch", hide_index=True,
                      column_config=_cols(("price_gap_click", "own_cvr", "mkt_cvr"), ("cvr_index",)))
     pp = d[d.price_gap_click.notna()]
     if not pp.empty:
@@ -280,7 +291,7 @@ with tab_price:
 with tab_tok:
     tk = token_rollup(d).head(60)
     st.markdown("Performance rolled up by query word — spot attributes (colour, size, form) where you over/under-index.")
-    st.dataframe(tk, width="stretch", hide_index=True, height=560,
+    st.dataframe(_hl(tk), width="stretch", hide_index=True, height=560,
                  column_config=_cols(("impr_share", "mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share"),
                                      ("ctr_index", "cvr_index")))
 

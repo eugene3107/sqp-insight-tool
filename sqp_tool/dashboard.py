@@ -40,6 +40,12 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 70
 [data-testid="stSidebar"] { border-right:1px solid #0A2A1C; }
 [data-testid="stSidebarUserContent"] { padding-top:0.5rem; margin-top:-3rem; }
 [data-testid="stSidebar"] [data-testid="stImage"] { margin-bottom:-0.5rem; }
+.ec-action { background:#FFFFFF; border:1px solid #DCE8E0; border-left:4px solid #1B6B3A; border-radius:8px; padding:12px 16px; margin-bottom:10px; }
+.ec-action .head { display:flex; align-items:center; gap:10px; }
+.ec-action .rank { background:#1B6B3A; color:#fff; font-weight:600; font-size:12px; border-radius:12px; min-width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
+.ec-action .q { font-weight:600; font-size:16px; color:#0A0A0A; }
+.ec-action .meta { color:#1B6B3A; font-size:12px; margin:4px 0 6px 34px; }
+.ec-action .why { color:#333333; font-size:14px; line-height:1.6; margin-left:34px; }
 .ec-note { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:14px 16px; color:#0F3D2A; }
 </style>
 """,
@@ -244,10 +250,20 @@ with tab_over:
 
 with tab_act:
     a = action_list(d, top_n=25)
-    st.dataframe(a, width="stretch", hide_index=True,
-                 column_config=_cols(("impr_share", "price_gap_click"), ("ctr_index", "cvr_index"),
-                                     purchases_at_stake=st.column_config.NumberColumn(format="%.1f"),
-                                     why=st.column_config.TextColumn(width="large")))
+    st.markdown('<div class="ec-label">Ranked by purchases at stake</div>', unsafe_allow_html=True)
+    for i, r in enumerate(a.itertuples(), start=1):
+        meta = (f"{r.quadrant} · {r.query_type.replace('_', ' ')} · volume {int(r.sqp_volume):,} · "
+                f"impr. share {r.impr_share:.2%} · CTR index {r.ctr_index:.2f}× · "
+                f"CVR index {'–' if pd.isna(r.cvr_index) else f'{r.cvr_index:.2f}×'} · "
+                f"at stake {r.purchases_at_stake:.1f}")
+        st.markdown(
+            f'<div class="ec-action"><div class="head"><span class="rank">{i}</span>'
+            f'<span class="q">{r.query}</span></div><div class="meta">{meta}</div>'
+            f'<div class="why">{r.why}</div></div>', unsafe_allow_html=True)
+    with st.expander("Table view"):
+        st.dataframe(a.drop(columns=["why"]), width="stretch", hide_index=True,
+                     column_config=_cols(("impr_share", "price_gap_click"), ("ctr_index", "cvr_index"),
+                                         purchases_at_stake=st.column_config.NumberColumn(format="%.1f")))
 
 with tab_q:
     quads = st.multiselect("Quadrant", sorted(d.quadrant.unique()), default=sorted(d.quadrant.unique()))

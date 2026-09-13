@@ -38,10 +38,11 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 70
 .ec-tile .s { font-size:13px; color:#333333; font-weight:300; }
 [data-testid="stToolbar"], [data-testid="stDecoration"], [data-testid="stStatusWidget"], #MainMenu { display:none !important; }
 [data-testid="stHeader"] { background:transparent; }
-[data-testid="stSidebar"] .ec-label { color:#8FC4A0; }
+[data-testid="stSidebar"] .ec-label { color:#8FC4A0; margin-bottom:4px; }
 [data-testid="stSidebar"] { border-right:1px solid #0A2A1C; }
 [data-testid="stSidebarUserContent"] { padding-top:0.5rem; margin-top:-3rem; }
-[data-testid="stSidebar"] [data-testid="stImage"] { margin-bottom:-0.5rem; }
+[data-testid="stSidebar"] [data-testid="stImage"] { margin-bottom:-0.75rem; }
+[data-testid="stSidebarUserContent"] [data-testid="stVerticalBlock"] { gap:0.6rem; }
 .ec-action { background:#FFFFFF; border:1px solid #DCE8E0; border-left:4px solid #1B6B3A; border-radius:8px; padding:12px 16px; margin-bottom:10px; }
 .ec-action .head { display:flex; align-items:center; gap:10px; }
 .ec-action .rank { background:#1B6B3A; color:#fff; font-weight:600; font-size:12px; border-radius:12px; min-width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
@@ -126,7 +127,7 @@ def _tile(col, label: str, value: str, sub: str) -> None:
 # --------------------------------------------------------------------------- sidebar
 with st.sidebar:
     if LOGO.exists():
-        st.image(str(LOGO), width=34)
+        st.image(str(LOGO), width=26)
     st.markdown('<div class="ec-label">Inputs</div>', unsafe_allow_html=True)
     uploads = st.file_uploader("SQP exports (.xlsx / .csv)", accept_multiple_files=True,
                                type=["xlsx", "xlsm", "csv", "tsv"])

@@ -132,9 +132,20 @@ with st.sidebar:
                                type=["xlsx", "xlsm", "csv", "tsv"])
     default_path = "" if IS_CLOUD else st.text_input("…or a local path", value="")
     st.markdown('<div class="ec-label">Thresholds</div>', unsafe_allow_html=True)
-    min_impr = st.number_input("Own impressions to trust CTR", 1, 1000, 20)
-    min_clicks = st.number_input("Own clicks to trust CVR", 1, 1000, 10)
-    price_band = st.slider("Price parity band ±", 0.0, 0.5, 0.15, 0.05)
+    min_impr = st.number_input(
+        "Own impressions to trust CTR", 1, 1000, 20,
+        help="Minimum of *your* impressions on a query before its CTR is judged against the market. "
+             "Below this the query is marked **Insufficient data** and left out of Actions. "
+             "Lower it for low-visibility ASINs; raise it for brand-level reports.")
+    min_clicks = st.number_input(
+        "Own clicks to trust CVR", 1, 1000, 10,
+        help="Minimum of *your* clicks before your CVR is compared with the market's — stops one purchase "
+             "on one click reading as a 100% conversion rate. Also gates the Price tab.")
+    price_band = st.slider(
+        "Price parity band ±", 0.0, 0.5, 0.15, 0.05,
+        help="How far your median price can sit from the market median and still count as parity. "
+             "Beyond it a query is **premium** or **discount**; premium + under-converting is flagged on the Price tab. "
+             "Widen it for high-ticket categories.")
     st.markdown('<div class="ec-label">Brand overrides</div>', unsafe_allow_html=True)
     own_in = st.text_input("Own-brand tokens (comma-sep, blank = infer)", "")
     comp_in = st.text_input("Competitor tokens (comma-sep, blank = infer)", "")

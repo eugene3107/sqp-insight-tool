@@ -36,7 +36,8 @@ h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #0A0A0A; font-weight: 70
 .ec-tile { background:#E7F2EB; border-left:4px solid #1B6B3A; border-radius:8px; padding:16px; }
 .ec-tile .v { font-size:28px; font-weight:700; color:#0A0A0A; line-height:1.1; }
 .ec-tile .s { font-size:13px; color:#333333; font-weight:300; }
-[data-testid="stToolbar"], [data-testid="stDecoration"], [data-testid="stStatusWidget"], #MainMenu { display:none !important; }
+[data-testid="stToolbarActions"], [data-testid="stMainMenu"], [data-testid="stDecoration"], [data-testid="stStatusWidget"], #MainMenu { display:none !important; }
+[data-testid="stExpandSidebarButton"] button { color:#1B6B3A; }
 [data-testid="stHeader"] { background:transparent; }
 [data-testid="stSidebar"] .ec-label { color:#8FC4A0; margin-bottom:4px; }
 [data-testid="stSidebar"] { border-right:1px solid #0A2A1C; }

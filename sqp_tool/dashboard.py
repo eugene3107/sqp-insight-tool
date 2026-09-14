@@ -104,7 +104,7 @@ def _cols(pct: tuple[str, ...] = (), idx: tuple[str, ...] = (), **extra) -> dict
     return cfg | extra
 
 
-CORE_RATES = ("mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share")
+CORE_RATES = ("mkt_ctr", "own_ctr", "mkt_cvr", "own_cvr", "purch_share", "share_drift")
 
 
 def _hl(df: pd.DataFrame):
